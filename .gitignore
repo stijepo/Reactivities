@@ -1,6 +1,4 @@
 bin
 obj
-.vs.code
-.DS_Dtore
-appsettings.json
+.DS_Store
 *.db
