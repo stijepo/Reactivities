@@ -54,6 +54,8 @@ namespace API
             identityBuilder.AddEntityFrameworkStores<DataContext>();
             
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
+
+            services.AddAuthentication();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
