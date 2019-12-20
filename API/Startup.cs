@@ -14,6 +14,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
+using Application.Interfaces;
+using Infrastructure.Security;
 
 
 namespace API
@@ -56,6 +58,8 @@ namespace API
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
             services.AddAuthentication();
+
+            services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
