@@ -16,7 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Application.Interfaces;
 using Infrastructure.Security;
-
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace API
 {
@@ -47,7 +48,12 @@ namespace API
             
             services.AddMediatR(typeof(List.Handler).Assembly);
             
-            services.AddControllers().AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
+            services.AddControllers(opt =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                opt.Filters.Add(new AuthorizeFilter(policy));
+            })
+            .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
             
             var builder = services.AddIdentityCore<AppUser>();
             
@@ -57,7 +63,19 @@ namespace API
             
             identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
-            services.AddAuthentication();
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]));
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+                {
+                    opt.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = key,
+                        ValidateAudience = false,
+                        ValidateIssuer = false
+                    };
+                });
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
         }
@@ -81,6 +99,7 @@ namespace API
             app.UseCors("CorsPolicy");
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
