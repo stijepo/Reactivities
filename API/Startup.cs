@@ -18,6 +18,7 @@ using Application.Interfaces;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using AutoMapper;
 
 namespace API
 {
@@ -47,6 +48,8 @@ namespace API
             });
             
             services.AddMediatR(typeof(List.Handler).Assembly);
+
+            services.AddAutoMapper(typeof(List.Handler));
             
             services.AddControllers(opt =>
             {
