@@ -8,7 +8,7 @@ namespace Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Comment",
+                name: "Comments",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
@@ -36,12 +36,12 @@ namespace Persistence.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_ActivityId",
-                table: "Comment",
+                table: "Comments",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comment_AuthorId",
-                table: "Comment",
+                table: "Comments",
                 column: "AuthorId");
         }
 
